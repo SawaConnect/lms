@@ -1,4 +1,4 @@
-### lms
+## SawaConnect E-Learning | LMS
 
 ### How to install moodle in ubuntu 18.04
 
@@ -17,7 +17,9 @@
 ## 1. Install Nginx
 
 `apt update`
+
 `apt upgrade -y`
+
 `apt install nginx -y`
 
 ---
@@ -40,13 +42,17 @@
 #### Add the following configuration under [mysqld]:
 
   `default_storage_engine = innodb`
+  
   `innodb_file_per_table = 1`
+  
   `innodb_file_format = Barracuda`
+  
   `innodb_large_prefix = 1`
 
 #### Restart MariaDB:
 
   `systemctl restart mariadb`
+  
   `systemctl status mariadb`
 
 #### Login to MariaDB:
@@ -56,9 +62,13 @@
 #### Creating a database for Moodle:
 
   `CREATE DATABASE moodle DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+  
   `CREATE USER 'usrmoodle'@'localhost' IDENTIFIED BY 'secret';`
+  
   `GRANT ALL PRIVILEGES ON moodle.* TO 'usrmoodle'@'localhost';`
+  
   `FLUSH PRIVILEGES;`
+  
   `exit`
 
 ---
@@ -75,16 +85,23 @@
 #### Change the php.ini configuration options as follow:
 
   `memory_limit = 256M`
+  
   `upload_max_filesize = 64M`
+  
   `post_max_size = 64M`
+  
   `max_execution_time = 360`
+  
   `max_input_time = 360`
+  
   `cgi.fix_pathinfo = 0`
+  
   `date.timezone = Asia/Dubai`
   
 #### Restart PHP-FPM:
 
   `systemctl restart php7.2-fpm`
+  
   `systemctl status php7.2-fpm`
   
  
@@ -153,8 +170,11 @@ Add the configuration below:
 #### Add certbot repository:
 
     ` apt install software-properties-common -y `
+    
     ` add-apt-repository universe `
+    
     ` add-apt-repository ppa:certbot/certbot `
+    
     ` apt update `
  
 #### Install certbot for Nginx:
@@ -166,22 +186,72 @@ Add the configuration below:
 certbot --nginx -d lms.sawaconnect.com
 
 
+END
 
-sudo mariabackup --backup --user=root --password=NAHla@102 --target-dir=/root/dbBackup/preupgrade_backup
+Source:  https://musaamin.web.id/cara-install-moodle-dengan-nginx-di-ubuntu-18-04/
 
-sudo mariabackup --prepare --target-dir=/root/dbBackup/preupgrade_backup
+---
+### Troubleshooting:
 
-  
+`sudo mariabackup --backup --user=root --password=NAHla@102 --target-dir=/root/dbBackup/preupgrade_backup`
 
+`sudo mariabackup --prepare --target-dir=/root/dbBackup/preupgrade_backup`
 
+---
 
-
-
-
-
-
-https://musaamin.web.id/cara-install-moodle-dengan-nginx-di-ubuntu-18-04/
-
+#### How to Install MariaDB 10.4 on Ubuntu 18.04, Ubuntu 20.04:
 
 https://www.linuxbabe.com/mariadb/install-mariadb-ubuntu-18-04-18-10
+
+  ` sudo apt-get install software-properties-common `
+
+  ` sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 `
+
+  ` sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mirror.lstn.net/mariadb/repo/10.4/ubuntu bionic main `
+
+  ` sudo apt update `
+
+  ` sudo apt install mariadb-server `
+  
+  ` systemctl status mysql `
+  
+  or
+  
+  ` systemctl status mariadb `
+  
+  ` sudo systemctl start mariadb `
+  
+  ` sudo systemctl enable mariadb `
+  
+  ` sudo mysql -u root `
+  
+  or
+  
+  ` sudo mariadb -u root `
+  
+  #### Run the Post Installation Script
+  
+  ` sudo mysql_secure_installation `
+  
+#### InnoDB vs XtraDB Storage Engine
+By default, until MariaDB 10.1, MariaDB uses the XtraDB storage engine, a performance enhanced fork of the InnoDB storage engine from MySQL. However, over time, MySQL has implemented almost all of the improvements. InnoDB has caught up, so from MariaDB 10.2, InnoDB is the default engine.
+
+To check which is the default storage engine, log into MariaDB monitor and run the following command.
+
+` show engines; `
+
+On MariaDB 10.1, the above command returns the following result, which indicates XtraDB is the default engine.
+
+On MariaDB 10.2, 10.3 and 10.4, the above command returns the following result, which indicates InnoDB is the default engine.
+
+
+
+
+
+
+
+
+
+
+
 
