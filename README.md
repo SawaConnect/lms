@@ -180,8 +180,8 @@ sudo mariabackup --prepare --target-dir=/root/dbBackup/preupgrade_backup
 
 
 
+https://musaamin.web.id/cara-install-moodle-dengan-nginx-di-ubuntu-18-04/
 
 
-
-
+https://www.linuxbabe.com/mariadb/install-mariadb-ubuntu-18-04-18-10
 
