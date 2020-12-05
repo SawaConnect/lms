@@ -92,20 +92,85 @@
 
 ### 4. Download Moodle
 
-#### Download Moodle v3.8
-
-`wget https://download.moodle.org/download.php/direct/stable38/moodle-latest-38.tgz`
-
 #### Download Moodle v3.10:
 
-`wget https://download.moodle.org/download.php/stable310/moodle-3.10.tgz'
+  `wget https://download.moodle.org/download.php/direct/stable310/moodle-3.10.tgz`
 
+  `tar xzvf moodle-3.10.tgz`
 
 #### Create folders for Moodle:
 
+  `mkdir -p /var/www/moodle/data`
+  
+  `mv moodle /var/www/moodle/web`
+  
+  `chown -R www-data:www-data /var/www/moodle`
+  
+  `chmod -R 755 /var/www/moodle`
 
+#### Configure the Nginx server block for lms.sawaconnect.com
+
+  `cd /etc/nginx/conf.d`
+
+  `nano lms.sawaconnect.com.conf`	
+
+
+Add the configuration below:
   
+  server {
+    listen 80;
+    server_name lms.sawaconnect.com;
+    root /var/www/moodle/web;
+    index index.php index.html index.htm;
+ 
+    location / {
+    	try_files $uri $uri/ /index.php?$query_string;       
+    }
+ 
+    location /dataroot/ {
+    	internal;
+    	alias /var/www/moodle/data;
+    }
+ 
+    location ~ [^/]\.php(/|$) {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+ 
+   }	
+
+#### Test and restart Nginx:
+        ` nginx -t `
+        ` systemctl restart nginx	`
+        ` systemctl status nginx `
+
+---
+
+### 5. Install SSL Let’s Encrypt
+
+#### Add certbot repository:
+
+    ` apt install software-properties-common -y `
+    ` add-apt-repository universe `
+    ` add-apt-repository ppa:certbot/certbot `
+    ` apt update `
+ 
+#### Install certbot for Nginx:
   
+  ` apt install certbot python3-certbot-nginx -y `
+
+### Request SSL for the subdomain lms.sawaconnect.com:
+
+certbot --nginx -d lms.sawaconnect.com
+
+
+
+sudo mariabackup --backup --user=root --password=NAHla@102 --target-dir=/root/dbBackup/preupgrade_backup
+
+sudo mariabackup --prepare --target-dir=/root/dbBackup/preupgrade_backup
+
   
 
 
